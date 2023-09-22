@@ -1,0 +1,53 @@
+server:
+  port: 9090
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      routes:
+      - id: couponappId
+        uri: lb://COUPON-SERVICE
+        predicates:
+        - Path=/couponapp/** 
+        filters:
+            - name: AuthenticationFilter
+             
+      - id: customerappId
+        uri: lb://CUSTOMER-SERVICE
+        predicates:
+        - Path=/customerapp/** 
+        filters:
+            - name: AuthenticationFilter
+            
+      - id: productappId
+        uri: lb://PRODUCT-SERVICE
+        predicates:
+        - Path=/productapp/** 
+        filters:
+            - name: AuthenticationFilter
+            
+      - id: orderappId
+        uri: lb://ORDER-SERVICE
+        predicates:
+        - Path=/orderapp/** 
+        filters:
+            - name: AuthenticationFilter
+            
+      - id: authappId
+        uri: lb://AUTHSERVER-SERVICE
+        predicates:
+        - Path=/authserver/** 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
